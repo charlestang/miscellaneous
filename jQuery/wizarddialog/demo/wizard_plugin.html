@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+        <title>jQuery UI Wizard Demo</title>
+        <link type="text/css" href="css/redmond/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
+        <script src="js/jquery-1.6.2.min.js"></script>
+        <script src="js/jquery-ui-1.8.16.custom.min.js"></script>
+        <script src="js/WizardDialog.js"></script>
+        <script>
+            $(function(){
+                $('input[type=button]').click(function(){
+                    $('#x').wizardDialog();
+                });
+                
+            });
+        </script>
+        <style>
+        .step {display:none}
+        </style>
+    </head>
+    <body>
+        <input type="button" value="Wizard"/>
+
+        <div title="Create Filter" id="x">
+            <form method="post" action="">
+                <div title="Customize Filter" class="step">
+                    <p>this is step 1.</p>
+                </div>
+                <div title="Filter Action" class="step">
+                    <p>this is step 2.</p>
+                </div>
+                <div title="Filter Action" class="step">
+                    <p>this is step 3.</p>
+                </div>
+                <div title="Submit" class="step">
+                    <p>this is the last step.</p>
+                </div>
+            </form>
+        </div>
+
+    </body>
+</html>
