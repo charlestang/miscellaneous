@@ -9,10 +9,13 @@
         <script src="js/WizardDialog.js"></script>
         <script>
             $(function(){
-                $('input[type=button]').click(function(){
-                    $('#x').wizardDialog();
+                $('#x').wizardDialog({autoOpen:false});
+                $('input.w1').click(function(){
+                    $('#x').wizardDialog('open');
                 });
-                
+                $('input.w2').click(function(){
+                    $('#x').wizardDialog('open');
+                });
             });
         </script>
         <style>
@@ -20,7 +23,8 @@
         </style>
     </head>
     <body>
-        <input type="button" value="Wizard"/>
+        <input type="button" class="w1" value="Wizard"/>
+        <input type="button" class="w1" value="The second Wizad"/>
 
         <div title="Create Filter" id="x">
             <form method="post" action="">

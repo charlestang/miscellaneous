@@ -43,7 +43,8 @@ $.widget('ui.wizardDialog', {
             modal: self.options.modal,
             width: self.options.width,
             autoOpen: false,
-            open: function(){self._openDialog(this);}
+            open: function(){self._openDialog(this);},
+            close: function(){self.cancel();}
         });
         
         $steps.each(function(i){
@@ -130,7 +131,9 @@ $.widget('ui.wizardDialog', {
     cancel: function() {
         var self = this, e = self.element;
         self.currentStep = 0;
-        e.dialog('close');
+        if (e.dialog('isOpen')) {
+            e.dialog('close');
+        }
         self._trigger('cancel');
         return self;
     },
