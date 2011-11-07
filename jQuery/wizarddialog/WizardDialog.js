@@ -114,10 +114,10 @@
                 $('.wizard-prev:visible', $container).button('option', 'disabled', false);
             }
         },
-        open: function(){
+        open: function(event){
             var self = this, e = self.element;
             e.dialog('open');
-            self._trigger('open');
+            self._trigger('open', event, e);
             return self;
         },
         prev: function() {
@@ -129,7 +129,7 @@
         },
         next: function(event) {
             var self = this, e = self.element;
-            if (false === self._trigger('beforenext', event)){
+            if (false === self._trigger('beforenext', event, [self.currentStep, self.$steps[self.currentStep]])){
                 return;
             }
             self.currentStep++;
@@ -140,7 +140,7 @@
         cancel: function(event) {
             var self = this, e = self.element;
             if (e.dialog('isOpen')) {
-                if (false === self._trigger('beforecancel', event)){
+                if (false === self._trigger('beforecancel', event, e)){
                     return;
                 }
                 self.currentStep = 0;
@@ -149,11 +149,8 @@
             }
             return self;
         },
-        done: function(event){
+        done: function(){
             var self = this, e = self.element;
-            if (false === self._trigger('beforedone', event)) {
-                return;
-            }
             self.currentStep = 0;
             self._trigger('done');
             e.dialog('close');

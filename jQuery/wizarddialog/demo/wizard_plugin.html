@@ -8,8 +8,59 @@
         <script src="js/jquery-1.6.2.min.js"></script>
         <script src="js/jquery-ui-1.8.16.custom.min.js"></script>
         <script src="js/WizardDialog.js"></script>
-        <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+        <script src="js/jquery.validate.min.js"></script>
+        <script src="js/partial.validate.js"></script>
         <script>
+function onDialogOpen(event,ui) {
+    var $form = $(this).find('form');
+    $form.FormNavigate();
+    var formdata = $form.serialize();
+    formdata = trimHiddenField($form,formdata);
+    $form.data('initialForm', formdata);
+}
+
+function onDialogBeforeClose(event, ui) {
+    var $form = $(this).find('form');
+    var formdata = $form.serialize();
+    formdata = trimHiddenField($form,formdata);
+    var $outer_dialog = $(this);
+
+    if ($form.data('initialForm') == formdata) {
+        return true;
+    } else {
+        var msg = 'Do you really want to leave this page ? ';
+        var html = '<div><p>' + msg + '</p></div>';
+        $(html).dialog({            
+            resizable:false,
+            stack:true,
+            modal:false,
+            title:'Confirm?',
+            buttons:{
+                Ok:function () {
+                    $outer_dialog.unbind('dialogbeforeclose');
+                    $outer_dialog.dialog('close');
+                    global_formNavigate = true;
+                    $(this).dialog('close');
+                    $outer_dialog.bind('dialogbeforeclose', onDialogBeforeClose); 
+                },  
+                Cancel:function(){$(this).dialog('close');}
+            }   
+        });
+    }
+    return false;
+}
+function trimHiddenField($form,formdata) {
+    $('input:hidden', $form).each(function(){
+        var name = $(this).attr('name');
+        var value = $(this).attr('value');
+        formdata=formdata.replace(name+'='+value, '');
+        formdata=formdata.replace('&&','&');
+        formdata=formdata.replace(/^&/,'');
+    });
+    return formdata;
+}
+
+
             $(function(){
                 $('form').validate(); 
                 $('form').FormNavigate('Do you really want to leave this page?');
@@ -22,15 +73,21 @@
                 $('input.w2').click(function(){
                     $('#x').wizardDialog('open');
                 });
-                $('#x').bind('wizarddialogopen', function(){
-                    console.log('open wizard dialog');
+                $('#x').bind('wizarddialogopen', onDialogOpen);
+                $('#x').bind('wizarddialogbeforenext', function(e, x, y){
+                    console.log('before next x:');
+                    console.log(x);
+                    console.log(y);
+                    var valid = true;
+                    $(y).each(function(){
+                        console.log($('input', this).attr('class'));
+                        if ($('input', this).hasClass('error')){
+                            valid = false;
+                        }
+                    });
+                    return valid;
                 });
-                $('#x').bind('wizarddialogbeforenext', function(){
-                    console.log('before next');
-                });
-                $('#x').bind('wizarddialogbeforecancel', function(){
-                    console.log('before cancel');
-                });
+                $('#x').bind('wizarddialogbeforecancel', onDialogBeforeClose);
             });
         </script>
         <style>
@@ -50,12 +107,12 @@
         <div title="Create Filter" id="x">
             <form method="post" action="">
                 <div title="Customize Filter" class="step">
-                    <p><label for="name">Name:</label><input type="text" id="name" name="name" value=""/></p>
+                    <p><label for="name">Name:</label><input class="numchar number required" type="text" id="name" name="name" value=""/></p>
                     <p><label for="pass">Password:</label><input type="password" id="pass" name="pass" value=""/></p>
                     <p><label for="pass_repeat">Repeat:</label><input type="password" id="pass_repeat" name="pass_repeat" value=""/></p>
                 </div>
                 <div title="Filter Action" class="step">
-                    <p><label for="phone">Phone:</label><input type="text" id="phone" name="phone" value=""/></p>
+                    <p><label for="phone">Phone:</label><input class="number" type="text" id="phone" name="phone" value=""/></p>
                     <p><label for="email">Email:</label><input class="email" type="text" id="email" name="email" value=""/></p>
                 </div>
                 <div title="Filter Action" class="step">
