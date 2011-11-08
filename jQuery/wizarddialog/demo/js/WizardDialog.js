@@ -26,7 +26,10 @@
             doneCaption:'Submit',
             modal:true,
             width:600,
-            autoOpen: true
+            autoOpen: true,
+            errorcheck: true,
+            leavemsg: true,
+            buttons:[]
         },
         /**
      * the jui plugin is stateful, the _create function will be called only 
@@ -38,6 +41,27 @@
             $steps = self.$steps = $('.step', e).hide(),
             stepCount = self.stepCount = self.$steps.length,
             currentStep = self.currentStep = 0;
+
+            if (self.options.errorcheck && $.fn.validate) {
+                var $form = $('form', e);
+                if ($form.length > 0){
+                    $form.validate();
+                    e.bind('wizarddialogbeforenext', function(e, x, y){
+                        var valid = true;
+                        $(y).each(function(){
+                            if ($('input', this).hasClass('error')){
+                                valid = false;
+                            }
+                        });
+                        return valid;
+                    });
+                } 
+            }
+
+            if (self.options.leavemsg && typeof onDialogOpen == 'function') {
+                e.bind('wizarddialogopen', onDialogOpen);
+                e.bind('wizarddialogbeforecancel', onDialogBeforeClose);
+            }
         
             e.dialog({
                 modal: self.options.modal,
@@ -84,6 +108,28 @@
                 }
             }
             ];
+
+            if (stepCount == 1){
+                if ( self.options.buttons.length != 0) {
+                    buttons = self.options.buttons;
+                } else {
+                    buttons = [
+                    {
+                        'text': 'Ok',
+                        click: function(){
+                            $('form',e).submit();
+                            self.done();
+                        }
+                    },
+                    {
+                        'text': 'Cancel',
+                        click: function(){
+                            self.cancel();
+                        }
+                    }
+                    ];
+                }
+            }
         
             e.dialog('option', 'buttons', buttons);
         },
