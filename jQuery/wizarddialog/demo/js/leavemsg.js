@@ -17,26 +17,35 @@ function onDialogBeforeClose(event, ui) {
     if ($form.data('initialForm') == formdata) {
         return true;
     } else {
-        var msg = 'Do you really want to leave this page ? ';
-        var html = '<div><p>' + msg + '</p></div>';
-        $(html).dialog({            
-            resizable:false,
-            stack:true,
-            modal:false,
-            title:'Confirm?',
-            buttons:{
-                Ok:function () {
-                    $outer_dialog.unbind('dialogbeforeclose');
-                    $outer_dialog.dialog('close');
-                    global_formNavigate = true;
-                    $(this).dialog('close');
-                    $outer_dialog.bind('dialogbeforeclose', onDialogBeforeClose); 
-                },  
-                Cancel:function(){
-                    $(this).dialog('close');
-                }
-            }   
-        });
+//        var msg = 'Do you really want to leave this page ? ';
+//        var html = '<div><p>' + msg + '</p></div>';
+//        $(html).dialog({            
+//            resizable:false,
+//            stack:true,
+//            modal:false,
+//            title:'Confirm?',
+//            buttons:{
+//                Ok:function () {
+//                    $outer_dialog.unbind('dialogbeforeclose');
+//                    $outer_dialog.dialog('close');
+//                    global_formNavigate = true;
+//                    $(this).dialog('close');
+//                    $outer_dialog.bind('dialogbeforeclose', onDialogBeforeClose); 
+//                },  
+//                Cancel:function(){
+//                    $(this).dialog('close');
+//                }
+//            }   
+//        });
+        if (confirm('Do you really want to leave this page ?')){
+            //$outer_dialog.unbind('dialogbeforeclose');
+            $outer_dialog.unbind('wizarddialogbeforecancel');
+            $outer_dialog.dialog('close');
+            global_formNavigate = true;
+            //$outer_dialog.bind('dialogbeforeclose', onDialogBeforeClose);
+            $outer_dialog.bind('wizarddialogbeforecancel', onDialogBeforeClose);
+        } else {
+        }
     }
     return false;
 }

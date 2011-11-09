@@ -4,10 +4,10 @@
  * Author: Charles <charlestang@foxmail.com>
  *
  * Depends:
- *      jquery.ui.dialog.js
+ *  jquery.ui.dialog.js
  *	jquery.ui.core.js
  *	jquery.ui.widget.js
- *      jquery.ui.button.js
+ *  jquery.ui.button.js
  *	jquery.ui.draggable.js
  *	jquery.ui.mouse.js
  *	jquery.ui.position.js
@@ -17,8 +17,8 @@
 
     $.widget('ui.wizardDialog', {
         /**
-     * all the customizations can be put here
-     */
+        * all the customizations can be put here
+        */
         options: {
             prevCaption:'Prev',
             nextCaption:'Next',
@@ -26,18 +26,44 @@
             doneCaption:'Submit',
             modal:true,
             width:600,
-            autoOpen: true
+            autoOpen: true,
+            errorcheck: true,
+            leavemsg: true,
+            buttons:[]
         },
         /**
-     * the jui plugin is stateful, the _create function will be called only 
-     * once before the widget is destroied.
-     */
+        * the jui plugin is stateful, the _create function will be called only 
+        * once before the widget is destroied.
+        */
         _create: function() {
             var self = this, 
             e = self.element,
             $steps = self.$steps = $('.step', e).hide(),
             stepCount = self.stepCount = self.$steps.length,
             currentStep = self.currentStep = 0;
+
+            if (self.options.errorcheck && $.fn.validate) {
+                var $form = $('form', e);
+                if ($form.length > 0){
+                    $form.validate();
+                    var form_field_check = function(e, x, y){
+                        var valid = true;
+                        $(y).each(function(){
+                            if ($('input', this).hasClass('error')){
+                                valid = false;
+                            }
+                        });
+                        return valid;
+                    };
+                    e.bind('wizarddialogbeforenext', form_field_check);
+                    e.bind('wizarddialogbeforedone', form_field_check);
+                } 
+            }
+
+            if (self.options.leavemsg && typeof onDialogOpen == 'function') {
+                e.bind('wizarddialogopen', onDialogOpen);
+                e.bind('wizarddialogbeforecancel', onDialogBeforeClose);
+            }
         
             e.dialog({
                 modal: self.options.modal,
@@ -49,10 +75,12 @@
             });
             $('.ui-dialog-titlebar-close', e.parent()).hide();
             
-            $steps.each(function(i){
-                var $this = $(this);
-                $this.attr('title', e.dialog('option', 'title') + ' - ' + (i+1) + '/' + stepCount + ' ' + $this.attr('title'));
-            });
+            if (stepCount > 1) {
+                $steps.each(function(i){
+                    var $this = $(this);
+                    $this.attr('title', e.dialog('option', 'title') + ' - ' + (i+1) + '/' + stepCount + ' ' + $this.attr('title'));
+                });
+            }
         
             var buttons = [
             {
@@ -84,6 +112,28 @@
                 }
             }
             ];
+
+            if (stepCount == 1){
+                if ( self.options.buttons.length != 0) {
+                    buttons = self.options.buttons;
+                } else {
+                    buttons = [
+                    {
+                        'text': 'Ok',
+                        click: function(){
+                            $('form',e).submit();
+                            self.done();
+                        }
+                    },
+                    {
+                        'text': 'Cancel',
+                        click: function(){
+                            self.cancel();
+                        }
+                    }
+                    ];
+                }
+            }
         
             e.dialog('option', 'buttons', buttons);
         },
@@ -151,6 +201,9 @@
         },
         done: function(){
             var self = this, e = self.element;
+            if (false === self._trigger('beforedone', event, [self.currentStep, self.$steps[self.currentStep]])){
+                return;
+            }
             self.currentStep = 0;
             self._trigger('done');
             e.dialog('close');

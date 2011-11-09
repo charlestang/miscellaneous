@@ -4,10 +4,10 @@
  * Author: Charles <charlestang@foxmail.com>
  *
  * Depends:
- *      jquery.ui.dialog.js
+ *  jquery.ui.dialog.js
  *	jquery.ui.core.js
  *	jquery.ui.widget.js
- *      jquery.ui.button.js
+ *  jquery.ui.button.js
  *	jquery.ui.draggable.js
  *	jquery.ui.mouse.js
  *	jquery.ui.position.js
@@ -17,8 +17,8 @@
 
     $.widget('ui.wizardDialog', {
         /**
-     * all the customizations can be put here
-     */
+        * all the customizations can be put here
+        */
         options: {
             prevCaption:'Prev',
             nextCaption:'Next',
@@ -32,9 +32,9 @@
             buttons:[]
         },
         /**
-     * the jui plugin is stateful, the _create function will be called only 
-     * once before the widget is destroied.
-     */
+        * the jui plugin is stateful, the _create function will be called only 
+        * once before the widget is destroied.
+        */
         _create: function() {
             var self = this, 
             e = self.element,
