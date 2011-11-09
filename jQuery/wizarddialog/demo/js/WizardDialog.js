@@ -46,7 +46,7 @@
                 var $form = $('form', e);
                 if ($form.length > 0){
                     $form.validate();
-                    e.bind('wizarddialogbeforenext', function(e, x, y){
+                    var form_field_check = function(e, x, y){
                         var valid = true;
                         $(y).each(function(){
                             if ($('input', this).hasClass('error')){
@@ -54,7 +54,9 @@
                             }
                         });
                         return valid;
-                    });
+                    };
+                    e.bind('wizarddialogbeforenext', form_field_check);
+                    e.bind('wizarddialogbeforedone', form_field_check);
                 } 
             }
 
@@ -73,10 +75,12 @@
             });
             $('.ui-dialog-titlebar-close', e.parent()).hide();
             
-            $steps.each(function(i){
-                var $this = $(this);
-                $this.attr('title', e.dialog('option', 'title') + ' - ' + (i+1) + '/' + stepCount + ' ' + $this.attr('title'));
-            });
+            if (stepCount > 1) {
+                $steps.each(function(i){
+                    var $this = $(this);
+                    $this.attr('title', e.dialog('option', 'title') + ' - ' + (i+1) + '/' + stepCount + ' ' + $this.attr('title'));
+                });
+            }
         
             var buttons = [
             {
@@ -197,6 +201,9 @@
         },
         done: function(){
             var self = this, e = self.element;
+            if (false === self._trigger('beforedone', event, [self.currentStep, self.$steps[self.currentStep]])){
+                return;
+            }
             self.currentStep = 0;
             self._trigger('done');
             e.dialog('close');

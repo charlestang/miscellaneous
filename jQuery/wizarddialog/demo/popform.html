@@ -29,7 +29,7 @@
                 <div title="Customize Filter" class="step">
                     <p>
                         <label for="username">Name:</label>
-                        <input class="numchar number required" type="text" id="username" name="username" value=""/></p>
+                        <input class="number required" type="text" id="username" name="username" value=""/></p>
                     <p>
                         <label for="password">Password:</label>
                         <input type="password" id="password" name="password" value=""/></p>
@@ -56,7 +56,7 @@
             </form>
         </div>
 
-        <input type="button" class="w1" value="None Wizad Form"/>
+        <input type="button" class="w2" value="None Wizad Form"/>
         <div title="Edit" id="x2">
             single step
             <form method="post" action="">
@@ -78,9 +78,18 @@
             jQuery(document).ready(function($){
                 $('#x1').wizardDialog({
                     errorcheck: false,//default true
-                    leavemsg: false//default true
+                    leavemsg: false, //default true
+                    autoOpen: false
                 });
-                $('#x2').wizardDialog();
+                $('#x2').wizardDialog({
+                    autoOpen: false
+                });
+                $('.w1').click(function(){
+                    $('#x1').wizardDialog('open');
+                });
+                $('.w2').click(function(){
+                    $('#x2').wizardDialog('open');
+                });
             });
             /* ]]> */
         </script>
