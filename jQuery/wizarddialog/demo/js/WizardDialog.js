@@ -26,9 +26,12 @@
             doneCaption:'Submit',
             modal:true,
             width:600,
-            autoOpen: true,
+            autoOpen: false,
             errorcheck: true,
             leavemsg: true,
+            done: function(){
+                $('form', this).submit();
+            },
             buttons:[]
         },
         /**
@@ -45,8 +48,13 @@
             if (self.options.errorcheck && $.fn.validate) {
                 var $form = $('form', e);
                 if ($form.length > 0){
-                    $form.validate();
+                    $form.validate({
+                        errorClass: 'wd_err',
+                        errorElement: 'span',
+                        onfocusout:function(){}
+                    });
                     var form_field_check = function(e, x, y){
+                        $form.valid();
                         var valid = true;
                         $(y).each(function(){
                             if ($('input', this).hasClass('error')){
