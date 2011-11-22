@@ -84,12 +84,7 @@
                     leavemsg: false, //default true
                     autoOpen: false
                 });
-                $('#x2').wizardDialog({
-                    autoOpen: false,
-                    done:function(){
-                        $('form', this).submit();
-                    }
-                });
+                $('#x2').wizardDialog();
                 $('.w1').click(function(){
                     $('#x1').wizardDialog('open');
                 });

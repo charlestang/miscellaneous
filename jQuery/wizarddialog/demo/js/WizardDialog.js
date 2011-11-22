@@ -127,14 +127,13 @@
                 } else {
                     buttons = [
                     {
-                        'text': 'Ok',
+                        'text': self.options.doneCaption,
                         click: function(){
-                            $('form',e).submit();
                             self.done();
                         }
                     },
                     {
-                        'text': 'Cancel',
+                        'text': self.options.cancelCaption,
                         click: function(){
                             self.cancel();
                         }
