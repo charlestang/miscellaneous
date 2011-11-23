@@ -26,8 +26,7 @@
     </head>
     <body>
         <input type="button" class="w1" value="Wizard Form"/>
-        <div title="Create" id="x1">
-            multiple step
+        <div title="Multiple Step Form" id="x1">
             <form method="post" action="">
                 <div title="Customize Filter" class="step">
                     <p>
@@ -43,7 +42,7 @@
                 <div title="Filter Action" class="step">
                     <p>
                         <label for="phone">Phone:</label>
-                        <input class="number" type="text" id="phone" name="phone" value=""/></p>
+                        <input class="number required" type="text" id="phone" name="phone" value=""/></p>
                     <p>
                         <label for="email">Email:</label>
                         <input class="email" type="text" id="email" name="email" value=""/></p>
@@ -59,9 +58,8 @@
             </form>
         </div>
 
-        <input type="button" class="w2" value="None Wizad Form"/>
-        <div title="Edit" id="x2">
-            single step
+        <input type="button" class="w2" value="None Wizard Form"/>
+        <div title="Single Step Edit" id="x2">
             <form method="post" action="">
                 <div title="Customize Filter" class="step">
                     <p>
@@ -80,9 +78,9 @@
             /*<![CDATA[*/
             jQuery(document).ready(function($){
                 $('#x1').wizardDialog({
-                    errorcheck: false,//default true
-                    leavemsg: false, //default true
-                    autoOpen: false
+                    //errorcheck: false,//default true
+                    //leavemsg: false, //default true
+                    autoOpen: false,
                 });
                 $('#x2').wizardDialog();
                 $('.w1').click(function(){

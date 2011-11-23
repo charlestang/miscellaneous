@@ -4,14 +4,14 @@ function onDialogOpen(event,ui) {
     var formdata = $form.serialize();
     formdata = trimHiddenField($form,formdata);
     $form.data('initialForm', formdata);
-    console.log(formdata);
+    //console.log(formdata);
 }
 
 function onDialogBeforeClose(event, ui) {
     var $form = $(this).find('form');
     var formdata = $form.serialize();
     formdata = trimHiddenField($form,formdata);
-    console.log(formdata);
+    //console.log(formdata);
     var $outer_dialog = $(this);
 
     if ($form.data('initialForm') == formdata) {
