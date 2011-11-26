@@ -62,7 +62,13 @@
                 if ($form.length > 0){
                     $form.validate({
                         errorElement: 'div',
-                        onfocusout:function(){}
+                        onfocusout:function(){},
+                        showErrors:function(errorMap,errorList) {
+                            for (var i = 0; this.errorList[i]; i++) {
+                                this.errorList[i].message = '<span class="ui-icon ui-icon-alert" style="float:left;margin-right:3px;"></span>' + this.errorList[i].message; 
+                            }
+                            this.defaultShowErrors();
+                        }
                     });
                     var form_field_check = function(e, x, y){
                         var valid_result = $form.valid();

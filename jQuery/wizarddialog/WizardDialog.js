@@ -26,9 +26,13 @@
             doneCaption:'Submit',
             modal:true,
             width:600,
-            autoOpen: true,
+            autoOpen: false,
             errorcheck: true,
             leavemsg: true,
+			isWizard: true,
+            done: function(){
+                $('form', this).submit();
+            },
             buttons:[]
         },
         /**
@@ -37,23 +41,38 @@
         */
         _create: function() {
             var self = this, 
-            e = self.element,
-            $steps = self.$steps = $('.step', e).hide(),
-            stepCount = self.stepCount = self.$steps.length,
+            e = self.element;
+		    
+			if (self.options.isWizard) {
+            	var $steps = self.$steps = $('.step', e);
+				if ($steps.length > 1) {
+					$steps.hide();
+				} else {
+					self.options.isWizard = false;
+					$steps = self.$steps = e.hide();
+				}
+			} else {
+				var $steps = self.$steps = e.hide();
+			}
+           	var stepCount = self.stepCount = self.$steps.length,
             currentStep = self.currentStep = 0;
 
             if (self.options.errorcheck && $.fn.validate) {
                 var $form = $('form', e);
                 if ($form.length > 0){
-                    $form.validate();
-                    var form_field_check = function(e, x, y){
-                        var valid = true;
-                        $(y).each(function(){
-                            if ($('input', this).hasClass('error')){
-                                valid = false;
+                    $form.validate({
+                        errorElement: 'div',
+                        onfocusout:function(){},
+                        showErrors:function(errorMap,errorList) {
+                            for (var i = 0; this.errorList[i]; i++) {
+                                this.errorList[i].message = '<span class="ui-icon ui-icon-alert" style="float:left;margin-right:3px;"></span>' + this.errorList[i].message; 
                             }
-                        });
-                        return valid;
+                            this.defaultShowErrors();
+                        }
+                    });
+                    var form_field_check = function(e, x, y){
+                        var valid_result = $form.valid();
+						return valid_result;
                     };
                     e.bind('wizarddialogbeforenext', form_field_check);
                     e.bind('wizarddialogbeforedone', form_field_check);
@@ -75,7 +94,7 @@
             });
             $('.ui-dialog-titlebar-close', e.parent()).hide();
             
-            if (stepCount > 1) {
+            if (self.options.isWizard && stepCount > 1) {
                 $steps.each(function(i){
                     var $this = $(this);
                     $this.attr('title', e.dialog('option', 'title') + ' - ' + (i+1) + '/' + stepCount + ' ' + $this.attr('title'));
@@ -119,14 +138,13 @@
                 } else {
                     buttons = [
                     {
-                        'text': 'Ok',
+                        'text': self.options.doneCaption,
                         click: function(){
-                            $('form',e).submit();
                             self.done();
                         }
                     },
                     {
-                        'text': 'Cancel',
+                        'text': self.options.cancelCaption,
                         click: function(){
                             self.cancel();
                         }
@@ -199,11 +217,12 @@
             }
             return self;
         },
-        done: function(){
+        done: function(event){
             var self = this, e = self.element;
             if (false === self._trigger('beforedone', event, [self.currentStep, self.$steps[self.currentStep]])){
                 return;
             }
+			global_formNavigate = true;
             self.currentStep = 0;
             self._trigger('done');
             e.dialog('close');
