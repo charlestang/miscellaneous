@@ -65,7 +65,10 @@
                         onfocusout:function(){},
                         showErrors:function(errorMap,errorList) {
                             for (var i = 0; this.errorList[i]; i++) {
-                                this.errorList[i].message = '<span class="ui-icon ui-icon-alert" style="float:left;margin-right:3px;"></span>' + this.errorList[i].message; 
+                                var el = errorList[i].element;
+                                console.log($(el).position());
+                                var left = $(el).position().left - 12;
+                                this.errorList[i].message = '<span class="ui-icon ui-icon-alert" style="margin-left:'+left+'px;float:left;margin-right:3px;"></span>' + this.errorList[i].message; 
                             }
                             this.defaultShowErrors();
                         }
