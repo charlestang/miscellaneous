@@ -14,3 +14,14 @@ function load_pieces($filename){
     }
     return $piece_list;
 }
+
+function load_map($filename) {
+    $map = array();
+    $lines = file($filename);
+    list($width, $height) = explode(',', $lines[0], 2);
+    $idx = 1;
+    for ($row = 0; $row < $height; $row++) {
+        $map[] = explode(',', $lines[$idx++], $width);
+    }
+    return new ZenMap(intval($width), intval($height), $map);
+}

@@ -12,7 +12,10 @@ class ZenMap extends ZenToken{
     public function check($map){
         for($row = 0; $row < $this->height; $row++) {
             for ($col = 0; $col < $this->width; $col++) {
-                if ($map[$row][$col] > 2) {
+                if ($this->shape[$row][$col] == 0 && $map->shape[$row][$col] != 0) {
+                    return false;
+                }
+                if ($map->shape[$row][$col] > 2) {
                     return false;
                 }
             }
@@ -26,10 +29,10 @@ class ZenMap extends ZenToken{
     public function finish($map) {
         for($row = 0; $row < $this->height; $row++) {
             for ($col = 0; $col < $this->width; $col++) {
-                if ($this->shape[$row][$col] == 0 && $map[$row][$col] != 0 ) {
+                if ($this->shape[$row][$col] == 0 && $map->shape[$row][$col] != 0 ) {
                     return false;
                 }
-                if ($this->shape[$row][$col] == 1 && $map[$row][$col] != 2) {
+                if ($this->shape[$row][$col] == 1 && $map->shape[$row][$col] != 2) {
                     return false;
                 }
             }

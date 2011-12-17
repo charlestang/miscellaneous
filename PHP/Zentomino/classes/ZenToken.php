@@ -82,9 +82,9 @@ class ZenToken {
         foreach ($this->shape as $row) {
             foreach ($row as $pos) {
                 if ($pos == 0) {
-                    echo '<div style="display:inline-block;height:15px;width:15px;background-color:white;"></div>';
+                    echo '<div style="display:inline-block;height:15px;width:15px;background-color:#FFF;"></div>';
                 } else {
-                    echo '<div style="display:inline-block;height:15px;width:15px;background-color:blue;"></div>';
+                    echo '<div style="display:inline-block;height:15px;width:15px;background-color:#'.intval($pos).'FF;"></div>';
                 }
             }
             echo '<br/>';

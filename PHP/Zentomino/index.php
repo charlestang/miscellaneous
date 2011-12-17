@@ -60,15 +60,18 @@ $shape = array(
     array(1,1,1),
 );
 
-$p = new ZenPiece(3,3,$shape);
+$test_shape = $shape;
+$test_shape[2][2] = 0;
+$p = new ZenPiece(3,3,$test_shape);
 $p->show();
 
-exit();
 echo '====map test===<br/>';
-$m = new ZenMap(3, 3, $shape);
-$m->show();
+$map = new ZenMap(3, 3, $shape);
+$map->show();
 echo 'token pick:<br/>';
-$x = $p->get(1);
+$x = $p->get(0);
 $x->show();
-$m = $m->put(0,0, $p->get(1));
+$m = $map->put(0,0, $p->get(0));
 $m->show();
+var_dump($map->check($m));
+var_dump($map->finish($m));
