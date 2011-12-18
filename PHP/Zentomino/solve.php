@@ -7,16 +7,10 @@ require dirname(__FILE__) . '/functions.php';
 
 
 $piece_list = load_pieces(dirname(__FILE__) . '/data/zenpiece.csv');
-$impossible_list = load_pieces(dirname(__FILE__) . '/data/impossible.csv');
 
 foreach ($piece_list as $piece) {
     echo 'Status count: ', $piece->length(), '<br/>';
     $piece->get(0)->show();
-}
-
-foreach ($impossible_list as $piece) {
-    echo 'Status count: ', $piece->length(), '<br/>';
-    $piece->show();
 }
 
 $map = load_map(dirname(__FILE__) . '/data/map8.csv');
@@ -24,6 +18,7 @@ $map->show();
 
 $solved = false;
 $cut_count = 0;
+$hit_count = 0;
 
 /**
  * @param ZenMap $map
@@ -32,7 +27,7 @@ $cut_count = 0;
  * @param int $idx
  */
 function solve($target_map, $idx, $result) {
-    global $map, $piece_list, $solved, $cut_count, $impossible_list;
+    global $map, $piece_list, $solved, $cut_count, $hit_count, $impossible_list;
     if ($solved)
         return;
     if ($idx >= count($piece_list)) {
@@ -57,6 +52,7 @@ function solve($target_map, $idx, $result) {
                     continue;
                 }
                 if ($map->check($new_map, $impossible_list) == false) {
+                    $hit_count++;
                     $cut_count++;
                     continue;
                 } else {
@@ -99,3 +95,4 @@ solve($map, 0, array());
 $end = getmicrotime();
 echo 'Total time: ', $end - $start, '<br/>';
 echo 'Cut count: ', $cut_count, '<br/>';
+echo 'Hit count: ', $hit_count, '<br/>';

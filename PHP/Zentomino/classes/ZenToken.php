@@ -17,6 +17,11 @@ class ZenToken {
      */
     public $shape = array();
 
+    /**
+     * @param int $width
+     * @param int $height
+     * @param array $shape 
+     */
     public function __construct($width, $height, $shape) {
         $this->height = $height;
         $this->width = $width;

@@ -9,44 +9,79 @@ class ZenMap extends ZenToken {
     }
 
     /**
+     * @param ZenMap $map
      * @return boolean
      */
     public function check($map, $impossible = array()) {
-        //if ($this->search_impossible($map, $impossible)) {
-        //    return false;
-        //}
-        return true;
-    }
-
-    private function search_impossible($map, $impossible) {
-        foreach ($impossible as $piece) {
-            for ($i = 0; $i < $piece->length(); $i++) {
-                $token = $piece->get($i);
-                for ($x = 0; $x <= $map->width - $token->width; $x++) {
-                    for ($y = 0; $y <= $map->height - $token->height; $y++) {
-                        $counter = 0;
-                        $match = true;
-                        for ($row = 0; $row < $token->height && $match; $row++) {
-                            for ($col = 0; $col < $token->width && $match; $col++) {
-                                if ($token->shape[$row][$col] == -1) {
-                                    $counter++;
-                                    continue;
-                                }
-                                if ($token->shape[$row][$col] != $map->shape[$row + $y][$col + $x]) {
-                                    $match = false;
-                                    continue;
-                                }
-                                $counter++;
-                            }
-                        }
-                        if ($counter == $token->width * $token->height) {
-                            return true;
-                        }
+        for ($r = 0; $r < $this->height; $r++) {
+            for ($c = 0; $c < $this->width; $c++) {
+                if ($r == 0 && $c == 0) {
+                    if ($map->shape[0][0] == 1
+                            && $map->shape[0][1] == 2
+                            && $map->shape[1][0] == 2) {
+                        return false;
                     }
+                } elseif (($r == 0 && $c > 0) && ($c < $this->width - 1)) {
+                    if ($map->shape[0][$c] == 1
+                            && $map->shape[0][$c - 1] == 2
+                            && $map->shape[0][$c + 1] == 2
+                            && $map->shape[1][$c] == 2) {
+                        return false;
+                    }
+                } elseif ($r == 0 && ($c == ($this->width - 1))) {
+                    $w = $this->width - 1;
+                    if ($map->shape[0][$w] == 1
+                            && $map->shape[0][$w - 1] == 2
+                            && $map->shape[1][$w] == 2) {
+                        return false;
+                    }
+                } elseif ($c == 0 && $r > 0 && $r < $this->height - 1) {
+                    if ($map->shape[$r][0] == 1
+                            && $map->shape[$r - 1][0] == 2
+                            && $map->shape[$r + 1][0] == 2
+                            && $map->shape[$r][1] == 2) {
+                        return false;
+                    }
+                } elseif ($c == 0 && $r == $this->height - 1) {
+                    if ($map->shape[$r][0] == 1
+                            && $map->shape[$r][1] == 2
+                            && $map->shape[$r-1][0] == 2) {
+                        return false;
+                    }
+                } elseif ($r < $this->height - 1 && $c < $this->width - 1) {
+                    if ($map->shape[$r][$c] == 1
+                            && $map->shape[$r - 1][$c] == 2
+                            && $map->shape[$r][$c - 1] == 2
+                            && $map->shape[$r][$c + 1] == 2
+                            && $map->shape[$r + 1][$c] == 2) {
+                        return false;
+                    }
+                }
+
+                if ($r > 0 && $r < $this->height - 1
+                        && $c > 0 && $c < $this->width - 2) {
+                    if ($map->shape[$r][$c] == 1 && $map->shape[$r][$c + 1] == 1
+                            && $map->shape[$r][$c - 1] == 2 && $map->shape[$r][$c + 2] == 2
+                            && $map->shape[$r - 1][$c] == 2 && $map->shape[$r - 1][$c + 1] == 2
+                            && $map->shape[$r + 1][$c] == 2 && $map->shape[$r + 1][$c + 1] == 2
+                    ) {
+                        return false;
+                    }
+                }
+                if ($r > 0 && $r < $this->height - 2
+                        && $c > 0 && $c < $this->width - 1) {
+                    if ($map->shape[$r][$c] == 1 && $map->shape[$r+1][$c] == 1
+                            && $map->shape[$r][$c-1] == 2 && $map->shape[$r][$c+1] == 2
+                            && $map->shape[$r-1][$c] == 2 && $map->shape[$r+2][$c] == 2
+                            && $map->shape[$r+1][$c-1] == 2 && $map->shape[$r+1][$c+1] == 2
+                    ) {
+                        return false;
+                    }
+
                 }
             }
         }
-        return false;
+        return true;
     }
 
     /**
