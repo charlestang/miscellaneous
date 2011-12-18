@@ -7,10 +7,16 @@ require dirname(__FILE__) . '/functions.php';
 
 
 $piece_list = load_pieces(dirname(__FILE__) . '/data/zenpiece.csv');
+$impossible_list = load_pieces(dirname(__FILE__) . '/data/impossible.csv');
 
 foreach ($piece_list as $piece) {
     echo 'Status count: ', $piece->length(), '<br/>';
     $piece->get(0)->show();
+}
+
+foreach ($impossible_list as $piece) {
+    echo 'Status count: ', $piece->length(), '<br/>';
+    $piece->show();
 }
 
 $map = load_map(dirname(__FILE__) . '/data/map8.csv');
@@ -26,7 +32,7 @@ $cut_count = 0;
  * @param int $idx
  */
 function solve($target_map, $idx, $result) {
-    global $map, $piece_list, $solved, $cut_count;
+    global $map, $piece_list, $solved, $cut_count, $impossible_list;
     if ($solved)
         return;
     if ($idx >= count($piece_list)) {
@@ -46,7 +52,11 @@ function solve($target_map, $idx, $result) {
         for ($x = 0; $x <= $map->width - $token->width; $x++) {
             for ($y = 0; $y <= $map->height - $token->height; $y++) {
                 $new_map = $target_map->put($x, $y, $token);
-                if ($map->check($new_map) == false) {
+                if (false === $new_map) {
+                    $cut_count++;
+                    continue;
+                }
+                if ($map->check($new_map, $impossible_list) == false) {
                     $cut_count++;
                     continue;
                 } else {
