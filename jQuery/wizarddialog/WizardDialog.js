@@ -1,4 +1,4 @@
-/*
+/**
  * jQuery UI Plugins: Wizard Dialog
  * 
  * Author: Charles <charlestang@foxmail.com>
@@ -29,7 +29,7 @@
             autoOpen: false,
             errorcheck: true,
             leavemsg: true,
-			isWizard: true,
+            isWizard: true,
             done: function(){
                 $('form', this).submit();
             },
@@ -43,18 +43,18 @@
             var self = this, 
             e = self.element;
 		    
-			if (self.options.isWizard) {
-            	var $steps = self.$steps = $('.step', e);
-				if ($steps.length > 1) {
-					$steps.hide();
-				} else {
-					self.options.isWizard = false;
-					$steps = self.$steps = e.hide();
-				}
-			} else {
-				var $steps = self.$steps = e.hide();
-			}
-           	var stepCount = self.stepCount = self.$steps.length,
+            if (self.options.isWizard) {
+                var $steps = self.$steps = $('.step', e);
+                if ($steps.length > 1) {
+                    $steps.hide();
+                } else {
+                    self.options.isWizard = false;
+                    $steps = self.$steps = e.hide();
+                }
+            } else {
+                var $steps = self.$steps = e.hide();
+            }
+            var stepCount = self.stepCount = self.$steps.length,
             currentStep = self.currentStep = 0;
 
             if (self.options.errorcheck && $.fn.validate) {
@@ -72,7 +72,7 @@
                     });
                     var form_field_check = function(e, x, y){
                         var valid_result = $form.valid();
-						return valid_result;
+                        return valid_result;
                     };
                     e.bind('wizarddialogbeforenext', form_field_check);
                     e.bind('wizarddialogbeforedone', form_field_check);
@@ -222,7 +222,7 @@
             if (false === self._trigger('beforedone', event, [self.currentStep, self.$steps[self.currentStep]])){
                 return;
             }
-			global_formNavigate = true;
+            global_formNavigate = true;
             self.currentStep = 0;
             self._trigger('done');
             e.dialog('close');

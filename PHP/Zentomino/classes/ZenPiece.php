@@ -1,9 +1,19 @@
 <?php
+
 class ZenPiece {
+
     /**
      * @var array
      */
     public $piece_list = array();
+
+    /**
+     * @var array 
+     */
+    public $possible_positions = array();
+
+    public $position_count = 0;
+
     public function __construct($width, $height, $shape) {
         $token = new ZenToken($width, $height, $shape);
         $this->append($token);
@@ -20,8 +30,35 @@ class ZenPiece {
         }
     }
 
+    /**
+     * @param ZenMap $map 
+     * @param boolean $must_use 是否必须使用
+     */
+    public function possible($map, $must_use = true) {
+        if (!$must_use) {
+            $this->possible_positions[] = array(-1, 0, 0);
+            $this->position_count++;
+        }
+        for ($s = 0, $length = $this->length(); $s < $length; $s++) {
+            $token = $this->get($s);
+            for ($x = 0; $x <= $map->width - $token->width; $x++) {
+                for ($y = 0; $y <= $map->height - $token->height; $y++) {
+                    $new_map = $map->put($x, $y, $token);
+                    if (false === $new_map) {
+                        continue;
+                    }
+                    if ($new_map->check2() == false) {
+                        continue;
+                    }
+                    $this->possible_positions[] = array($s, $x, $y);
+                    $this->position_count++;
+                }
+            }
+        }
+    }
+
     public function show() {
-        foreach($this->piece_list as $token) {
+        foreach ($this->piece_list as $token) {
             $token->show();
         }
     }
@@ -49,4 +86,5 @@ class ZenPiece {
     public function get($index) {
         return $this->piece_list[$index];
     }
+
 }

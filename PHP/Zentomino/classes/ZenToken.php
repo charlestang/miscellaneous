@@ -89,7 +89,7 @@ class ZenToken {
                 if ($pos == 0) {
                     echo '<div style="display:inline-block;height:15px;width:15px;background-color:#FFF;"></div>';
                 } else {
-                    echo '<div style="display:inline-block;height:15px;width:15px;background-color:#'. (intval($pos)*2 + 5).'CF;"></div>';
+                    echo '<div style="display:inline-block;height:15px;width:15px;background-color:#' . (intval($pos) * 2 + 5) . 'CF;"></div>';
                 }
             }
             echo '<br/>';

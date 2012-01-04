@@ -13,12 +13,13 @@ foreach ($piece_list as $piece) {
     $piece->get(0)->show();
 }
 
-$map = load_map(dirname(__FILE__) . '/data/map8.csv');
+$map = load_map(dirname(__FILE__) . '/data/map11x7q1.csv');
 $map->show();
 
 $solved = false;
 $cut_count = 0;
 $hit_count = 0;
+$area_count= 0;
 
 /**
  * @param ZenMap $map
@@ -27,7 +28,7 @@ $hit_count = 0;
  * @param int $idx
  */
 function solve($target_map, $idx, $result) {
-    global $map, $piece_list, $solved, $cut_count, $hit_count, $impossible_list;
+    global $map, $piece_list, $solved, $area_count, $cut_count, $hit_count, $impossible_list;
     if ($solved)
         return;
     if ($idx >= count($piece_list)) {
@@ -47,12 +48,15 @@ function solve($target_map, $idx, $result) {
         for ($x = 0; $x <= $map->width - $token->width; $x++) {
             for ($y = 0; $y <= $map->height - $token->height; $y++) {
                 $new_map = $target_map->put($x, $y, $token);
+                if ($cut_count % 100000 == 0) {
+                    error_log('progress: ' . $cut_count);
+                }
                 if (false === $new_map) {
                     $cut_count++;
                     continue;
                 }
-                if ($map->check($new_map, $impossible_list) == false) {
-                    $hit_count++;
+                if ($new_map->check2() === false) {
+                    $area_count++;
                     $cut_count++;
                     continue;
                 } else {
@@ -85,10 +89,7 @@ function solve($target_map, $idx, $result) {
     }
 }
 
-function getmicrotime() {
-    list($usec, $sec) = explode(" ", microtime());
-    return ((float) $usec + (float) $sec);
-}
+
 
 $start = getmicrotime();
 solve($map, 0, array());
@@ -96,3 +97,4 @@ $end = getmicrotime();
 echo 'Total time: ', $end - $start, '<br/>';
 echo 'Cut count: ', $cut_count, '<br/>';
 echo 'Hit count: ', $hit_count, '<br/>';
+echo 'Area count: ', $area_count, '<br/>';

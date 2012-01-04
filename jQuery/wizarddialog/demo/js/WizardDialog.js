@@ -29,32 +29,59 @@
             autoOpen: false,
             errorcheck: true,
             leavemsg: true,
-			isWizard: true,
+            isWizard: true,
             done: function(){
                 $('form', this).submit();
             },
-            buttons:[]
+            // original options
+            buttons: {},
+            closeOnEscape: true,
+            closeText: 'close',
+            dialogClass: '',
+            draggable: true,
+            hide: null,
+            height: 'auto',
+            maxHeight: false,
+            maxWidth: false,
+            minHeight: 150,
+            minWidth: 150,
+            position: {
+                my: 'center',
+                at: 'center',
+                collision: 'fit',
+                // ensure that the titlebar is never outside the document
+                using: function(pos) {
+                    var topOffset = $(this).css(pos).offset().top;
+                    if (topOffset < 0) {
+                        $(this).css('top', pos.top - topOffset);
+                    }
+                }
+            },
+            resizable: true,
+            show: null,
+            stack: true,
+            title: '',
+            zIndex: 1000
         },
         /**
         * the jui plugin is stateful, the _create function will be called only 
         * once before the widget is destroied.
         */
         _create: function() {
-            var self = this, 
-            e = self.element;
+            var self = this, e = self.element;
 		    
-			if (self.options.isWizard) {
-            	var $steps = self.$steps = $('.step', e);
-				if ($steps.length > 1) {
-					$steps.hide();
-				} else {
-					self.options.isWizard = false;
-					$steps = self.$steps = e.hide();
-				}
-			} else {
-				var $steps = self.$steps = e.hide();
-			}
-           	var stepCount = self.stepCount = self.$steps.length,
+            if (self.options.isWizard) {
+                var $steps = self.$steps = $('.step', e);
+                if ($steps.length > 1) {
+                    $steps.hide();
+                } else {
+                    self.options.isWizard = false;
+                    $steps = self.$steps = e.hide();
+                }
+            } else {
+                var $steps = self.$steps = e.hide();
+            }
+            var stepCount = self.stepCount = self.$steps.length,
             currentStep = self.currentStep = 0;
 
             if (self.options.errorcheck && $.fn.validate) {
@@ -75,7 +102,7 @@
                     });
                     var form_field_check = function(e, x, y){
                         var valid_result = $form.valid();
-						return valid_result;
+                        return valid_result;
                     };
                     e.bind('wizarddialogbeforenext', form_field_check);
                     e.bind('wizarddialogbeforedone', form_field_check);
@@ -159,10 +186,10 @@
             e.dialog('option', 'buttons', buttons);
         },
         /**
-     * when you call this plugin without any arguments or just give the options
-     * this function will be called.
-     * after the _create function this function will be called too.
-     */
+         * when you call this plugin without any arguments or just give the options
+         * this function will be called.
+         * after the _create function this function will be called too.
+         */
         _init: function() {
             this.currentStep = 0;
             if (this.options.autoOpen) {
@@ -225,7 +252,7 @@
             if (false === self._trigger('beforedone', event, [self.currentStep, self.$steps[self.currentStep]])){
                 return;
             }
-			global_formNavigate = true;
+            global_formNavigate = true;
             self.currentStep = 0;
             self._trigger('done');
             e.dialog('close');
